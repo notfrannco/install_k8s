@@ -1,0 +1,41 @@
+1) install helm for package management and etcdctl
+sudo apt update
+sudo apt install etcd-client
+sudo snap install helm --classic
+
+2) install containerd CRI
+sudo install_cri.sh
+
+3) install kubetools
+sudo install_kubetools.sh
+
+4) Run Kubeadm on Master Configure the kubectl command
+sudo kubeadm init
+
+5) Install network plugin Calico and check that the pod run fine in the kube-system namesapce
+kubectl apply -f https://docs.projectcalico.org/manifests/calico.yaml
+
+
+6) Run the join command on the worker nodes
+sudo kubeadm token create --print-join-command
+
+
+7) install metric servers
+# info on https://github.com/kubernetes-sigs/metrics-server
+kubectl apply -f https://github.com/kubernetes-sigs/metrics-server/releases/latest/download/components.yaml
+
+# check the pods on kubectl -n kube-system get pods
+# edit the deploy
+kubectl -n kube-system edit deploy/metrics-server
+# add the following  in spec.templates.spec.containers.args
+--kubelet-insecure-tls
+--kubelet-prefered-addres-types=InternalIP,ExternalIP,Hostname
+
+# check the logs of the metrics-server pod should say "generating selfsigned cert"
+
+# test
+kubectl top pods --all-namespace
+
+
+8) install ingress nginx
+helm upgrade --install ingress-nginx ingress-nginx --repo https://kubernetes.github.io/ingress-nginx --namespace ingress-nginx --create-namespace 
