@@ -31,10 +31,10 @@ lsmod | grep overlay
 sudo sysctl --system
 
 # (Install containerd)
-sudo apt install containerd -y
+sudo apt-get update && sudo apt-get install -y containerd
 sudo mkdir -p /etc/containerd
 sudo bash -c 'containerd config default > /etc/containerd/config.toml'
 sudo sed -i 's/SystemdCgroup \= false/SystemdCgroup \= true/g' /etc/containerd/config.toml
 
-sudo systemctl start containerd
+sudo systemctl restart containerd
 sudo systemctl enable containerd
