@@ -40,7 +40,7 @@ kubectl apply -f https://github.com/kubernetes-sigs/metrics-server/releases/late
 kubectl -n kube-system edit deploy/metrics-server
 # add the following  in spec.templates.spec.containers.args
 --kubelet-insecure-tls
---kubelet-prefered-addres-types=InternalIP,ExternalIP,Hostname
+--kubelet-preferred-address-type=InternalIP,ExternalIP,Hostname
 
 # check the logs of the metrics-server pod should say "generating selfsigned cert"
 
